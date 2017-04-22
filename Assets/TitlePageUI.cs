@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TitlePageUI : MonoBehaviour {
 
@@ -16,6 +17,6 @@ public class TitlePageUI : MonoBehaviour {
 
     void NewGame()
     {
-        Debug.Log("New Game");
+        SceneManager.LoadScene(1);
     }
 }
