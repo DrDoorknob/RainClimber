@@ -7,7 +7,7 @@ public class TitlePageUI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		// TODO: Remove "Quit" if on a phone
 	}
 	
 	// Update is called once per frame
@@ -18,5 +18,10 @@ public class TitlePageUI : MonoBehaviour {
     void NewGame()
     {
         SceneManager.LoadScene(1);
+    }
+
+    void Exit()
+    {
+        Application.Quit();
     }
 }

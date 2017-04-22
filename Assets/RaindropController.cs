@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,8 +25,8 @@ public class RaindropController : MonoBehaviour {
         Vector2 firstDrop = player.transform.position;
         firstDrop += 2 * Vector2.down;
         SpawnRaindropAt(firstDrop);
-        firstDrop.x += 1;
-        float scoreDebug = ScoreSpawnPosition(firstDrop);
+        //firstDrop.x += 1;
+        //float scoreDebug = ScoreSpawnPosition(firstDrop);
         var firstSpawnArea = new Rect((Vector2)player.transform.position - (spawnAreaSize * .5f), spawnAreaSize);
         for (var i = 0; i < minRaindropsAbovePlayer; i++)
         {
@@ -37,7 +36,6 @@ public class RaindropController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        var camRect = CameraRect();
         Raindrop dying = null;
         foreach (var r in dropPool.Items)
         {
@@ -61,7 +59,7 @@ public class RaindropController : MonoBehaviour {
 
     private Raindrop SpawnRaindropAt(Vector2 v)
     {
-        float randomSpeed = UnityEngine.Random.Range(minRaindropSpeed, maxRaindropSpeed);
+        float randomSpeed = Random.Range(minRaindropSpeed, maxRaindropSpeed);
         return SpawnRaindropAt(v, randomSpeed);
     }
 
@@ -100,10 +98,10 @@ public class RaindropController : MonoBehaviour {
         {
             if (dropsAboveCamera == 0)
             {
-                float xPos = UnityEngine.Random.value;
+                float xPos = Random.value;
                 Vector2 spawnPoint = cam.ViewportToWorldPoint(new Vector3(xPos, 1f, 10f));
-                spawnPoint += Vector2.up * UnityEngine.Random.Range(1f, 12f);
-                float randomSpeed = UnityEngine.Random.Range(minRaindropSpeed, maxRaindropSpeed);
+                spawnPoint += Vector2.up * Random.Range(1f, 12f);
+                float randomSpeed = Random.Range(minRaindropSpeed, maxRaindropSpeed);
                 SpawnRaindropAt(spawnPoint, randomSpeed);
             }
             else
@@ -123,8 +121,8 @@ public class RaindropController : MonoBehaviour {
         {
             // the third part of the vector will be the scoring for its usage
             locationChoices[i] = new Vector3(
-                spawnArea.x + (UnityEngine.Random.value * spawnArea.width),
-                spawnArea.y + (UnityEngine.Random.value * spawnArea.height),
+                spawnArea.x + (Random.value * spawnArea.width),
+                spawnArea.y + (Random.value * spawnArea.height),
                 0);
             locationChoices[i].z = ScoreSpawnPosition(locationChoices[i]);
             totalScore += locationChoices[i].z;
@@ -134,7 +132,7 @@ public class RaindropController : MonoBehaviour {
             // area is flooded - no spawn
             return;
         }
-        float pickedScore = UnityEngine.Random.Range(0f, totalScore);
+        float pickedScore = Random.Range(0f, totalScore);
         Vector2 finalPosition = locationChoices[LOCATION_CHOICE_SEED_SIZE - 1];
         foreach (var choice in locationChoices)
         {
@@ -145,7 +143,7 @@ public class RaindropController : MonoBehaviour {
             }
         }
 
-        float randomSpeed = UnityEngine.Random.Range(minRaindropSpeed, maxRaindropSpeed);
+        float randomSpeed = Random.Range(minRaindropSpeed, maxRaindropSpeed);
 
         SpawnRaindropAt(finalPosition, randomSpeed);
 
