@@ -6,33 +6,17 @@ public class RaindropController : MonoBehaviour {
 
     public GameObject raindropTemplate;
     public Player player;
+    public BoxCollider2D playAreaBox;
 
-    List<Raindrop> drops = new List<Raindrop>(100);
-    List<Raindrop> inactiveDrops = new List<Raindrop>(100);
+    public GameObjectPool<Raindrop> dropPool;
 
     // Use this for initialization
     void Start () {
-	}
+        dropPool = new GameObjectPool<Raindrop>(20, raindropTemplate);
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
-
-    void MakeRain()
-    {
-        Raindrop raindrop;
-        if (inactiveDrops.Count != 0)
-        {
-            raindrop = inactiveDrops[0];
-            inactiveDrops.Remove(raindrop);
-            raindrop.gameObject.SetActive(true);
-        }
-        
-    }
-
-    void DeactivateDrop(Raindrop r)
-    {
-
-    }
 }

@@ -23,7 +23,7 @@ public class Raindrop : MonoBehaviour {
         transform.position = transform.position + framevel3;
 	}
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         Player p = other.gameObject.GetComponent<Player>();
         if (p == null)
