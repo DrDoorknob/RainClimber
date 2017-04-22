@@ -48,6 +48,7 @@ public class GameObjectPool<T> where T : MonoBehaviour
                 newGO = GameObject.Instantiate(template, pos, Quaternion.identity);
             }
             item = newGO.GetComponent<T>();
+            items.Add(item);
         }
         return item;
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,10 +37,14 @@ public class Player : MonoBehaviour {
         }
         else
         {
-            
         }
         ReadControls();
 
+    }
+
+    public void Kill()
+    {
+        cam.GetComponent<CameraFollower2D>().target = null;
     }
 
     private void ReadControls()
@@ -53,9 +58,12 @@ public class Player : MonoBehaviour {
             {
                 isUsingController = false;
             }
-            Vector3 mouseWorldPos = Input.mousePosition;
-            mouseWorldPos.z = transform.position.z - cam.transform.position.z;
-            leapAimPosition = cam.ScreenToWorldPoint(mouseWorldPos);
+            if (!isUsingController)
+            {
+                Vector3 mouseWorldPos = mousePosition;
+                mouseWorldPos.z = transform.position.z - cam.transform.position.z;
+                leapAimPosition = cam.ScreenToWorldPoint(mouseWorldPos);
+            }
             if (debugAimPosition != null)
             {
                 debugAimPosition.transform.position = leapAimPosition;
@@ -71,7 +79,7 @@ public class Player : MonoBehaviour {
     public void EnterDrop(Raindrop r)
     {
         
-        if (r == swimmingDrop)
+        if (swimmingDrop != null)
         {
             return; // ignore
         }
