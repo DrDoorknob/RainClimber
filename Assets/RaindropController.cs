@@ -5,6 +5,7 @@ using UnityEngine;
 public class RaindropController : MonoBehaviour {
 
     public GameObject raindropTemplate;
+    public Player player;
 
     List<Raindrop> drops = new List<Raindrop>(100);
     List<Raindrop> inactiveDrops = new List<Raindrop>(100);

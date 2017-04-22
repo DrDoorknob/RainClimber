@@ -6,8 +6,14 @@ public class Raindrop : MonoBehaviour {
 
     public Vector2 velocity;
 
+    public static int idIncrement = 0;
+
+    public int id;
+
 	// Use this for initialization
 	void Start () {
+        id = idIncrement++;
+        name = "Raindrop" + id;
 	}
 	
 	// Update is called once per frame
@@ -16,4 +22,14 @@ public class Raindrop : MonoBehaviour {
         var framevel3 = new Vector3(framevel.x, framevel.y, 0);
         transform.position = transform.position + framevel3;
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Player p = other.gameObject.GetComponent<Player>();
+        if (p == null)
+        {
+            Debug.Log("Collided with a non-player rigidbody. ignoring.");
+        }
+        p.EnterDrop(this);
+    }
 }
