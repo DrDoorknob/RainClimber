@@ -16,6 +16,7 @@ public class Player : MonoBehaviour {
 
     public Animator playerAnimator;
     public AudioShuffleDeck dropletSoundEmitter;
+    public GameUI gameUI;
     public SpriteRenderer sprite;
     public Raindrop swimmingDrop;
     public ProjectilePredictionDraw leapGuide;
@@ -68,19 +69,13 @@ public class Player : MonoBehaviour {
         dead = true;
         cam.GetComponent<CameraFollower2D>().target = null;
         leapGuide.gameObject.SetActive(false);
+        gameUI.GameOver();
     }
 
     private void ReadControls()
     {
 
         Vector2 mousePosition = Input.mousePosition;
-        if (dead)
-        {
-            if (Input.anyKeyDown)
-            {
-                SceneManager.LoadScene(1);
-            }
-        }
 
         var xAxis = Input.GetAxis("Horizontal");
         var yAxis = Input.GetAxis("Vertical");
