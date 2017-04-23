@@ -14,11 +14,15 @@ public class Player : MonoBehaviour {
     bool isUsingController;
     public bool ControlsEnabled { get; set; }
 
+    public Animator playerAnimator;
+    public AudioShuffleDeck dropletSoundEmitter;
+    public SpriteRenderer sprite;
     public Raindrop swimmingDrop;
     public ProjectilePredictionDraw leapGuide;
     public Vector2 leapAimPosition;
     public Transform debugAimPosition;
     public float leapStrength;
+    public float thumbstickTurnSensitivity;
 
     bool dead;
 
@@ -44,6 +48,9 @@ public class Player : MonoBehaviour {
         }
         else
         {
+            Vector2 rotateDirection = body.velocity.normalized;
+            sprite.flipX = rotateDirection.x < 0;
+            sprite.transform.rotation = Quaternion.FromToRotation(Vector3.up, rotateDirection);
         }
         if (ControlsEnabled)
         {
@@ -51,7 +58,6 @@ public class Player : MonoBehaviour {
         }
         else if (dead)
         {
-
         }
         leapGuide.aimPoint = leapAimPosition;
 
@@ -87,12 +93,27 @@ public class Player : MonoBehaviour {
         {
             isUsingController = true;
         }
-        if (!isUsingController)
+        if (isUsingController)
         {
+            /* Incomplete attempt at slow-rotational aiming
+            Vector2 aimUnitDirection = leapAimPosition - (Vector2)transform.position;
+            aimUnitDirection.Normalize();
+            float angle = Vector2.Angle(Vector2.up, aimUnitDirection);
+            angle += Time.deltaTime * thumbstickTurnSensitivity * xAxis;
+            Vector2 unitAngle = AngleToUnitVector(angle);
+            leapAimPosition = transform.position;
+            leapAimPosition += unitAngle;*/
+
+            // aim directly by thumbstick
+            leapAimPosition = transform.position;
+            leapAimPosition += new Vector2(xAxis, yAxis);
+        }
+        else {
             Vector3 mouseWorldPos = mousePosition;
             mouseWorldPos.z = transform.position.z - cam.transform.position.z;
             leapAimPosition = cam.ScreenToWorldPoint(mouseWorldPos);
         }
+        lastMousePosition = mousePosition;
         if (debugAimPosition != null)
         {
             debugAimPosition.transform.position = leapAimPosition;
@@ -100,12 +121,23 @@ public class Player : MonoBehaviour {
 
         if (swimmingDrop != null)
         {
-
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetButtonDown("Jump"))
             {
                 LeapFromRaindrop();
             }
         }
+    }
+
+    private static Vector2 AngleToUnitVector(float angle)
+    {
+        // https://forum.unity3d.com/threads/c-getting-a-vector-2-from-an-angle.273833/
+        angle *= Mathf.Deg2Rad;
+        var ca = Mathf.Cos(angle);
+        var sa = Mathf.Sin(angle);
+        var rx = -1 * sa;
+        var ry = ca;
+
+        return new Vector2(rx, ry);
     }
 
     public void EnterDrop(Raindrop r)
@@ -118,7 +150,10 @@ public class Player : MonoBehaviour {
         Debug.Log("Entered raindrop");
         body.gravityScale = 0f;
         swimmingDrop = r;
+        playerAnimator.SetBool("InWater", true);
+        dropletSoundEmitter.PlayOne();
         leapGuide.gameObject.SetActive(true);
+        sprite.transform.rotation = Quaternion.identity;
     }
 
     public void LeapFromRaindrop()
@@ -126,6 +161,8 @@ public class Player : MonoBehaviour {
         Debug.Log("Leap!");
         body.gravityScale = 1f;
         swimmingDrop = null;
+        playerAnimator.SetBool("InWater", false);
+        dropletSoundEmitter.PlayOne();
         Vector2 leapDirection = leapAimPosition - (Vector2)transform.position;
         leapDirection.Normalize();
         body.AddForce(leapDirection * leapStrength, ForceMode2D.Impulse);
