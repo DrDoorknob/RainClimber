@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -13,6 +14,8 @@ public class GameUI : MonoBehaviour {
     public Text gameOverClimbStats;
     public Text timeDisplay;
     public CanvasGroup gameOverCanvasGroup;
+    public GameObject pauseFirstSelect;
+    public EventSystem eventSystem;
 
     float gameStartTime;
     float topPlayerHeight;
@@ -71,8 +74,15 @@ public class GameUI : MonoBehaviour {
     {
         anim.SetBool("Paused", true);
         Time.timeScale = 0;
-        // fun fact: In a game with more team members or more levels, this would probably be a good time to use BroadcastMessage to avoid coupling to Player
         player.ControlsEnabled = false;
+        StartCoroutine("highlightBtn");
+    }
+
+    IEnumerator highlightBtn()
+    {
+        eventSystem.SetSelectedGameObject(null);
+        yield return null;
+        eventSystem.SetSelectedGameObject(pauseFirstSelect);
     }
 
     public void CloseMenu()

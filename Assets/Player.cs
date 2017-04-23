@@ -21,9 +21,11 @@ public class Player : MonoBehaviour {
     public Raindrop swimmingDrop;
     public ProjectilePredictionDraw leapGuide;
     public Vector2 leapAimPosition;
+    public Transform leapOrientation;
     public Transform debugAimPosition;
     public float leapStrength;
     public float thumbstickTurnSensitivity;
+    public float thumbstickTriggerScale;
 
     bool dead;
 
@@ -41,7 +43,6 @@ public class Player : MonoBehaviour {
 	void Update () {
         if (swimmingDrop != null)
         {
-            leapGuide.originPoint = transform.position;
             Vector2 toDrop = swimmingDrop.transform.position - transform.position;
             float toDropMagnitude = toDrop.magnitude;
             //float pullForceScale = swimmingDrop.GetComponent<CircleCollider2D>().radius - toDropMagnitude;
@@ -57,10 +58,7 @@ public class Player : MonoBehaviour {
         {
             ReadControls();
         }
-        else if (dead)
-        {
-        }
-        leapGuide.aimPoint = leapAimPosition;
+        leapGuide.aimDirection = leapOrientation.forward;
 
     }
 
@@ -90,23 +88,18 @@ public class Player : MonoBehaviour {
         }
         if (isUsingController)
         {
-            /* Incomplete attempt at slow-rotational aiming
-            Vector2 aimUnitDirection = leapAimPosition - (Vector2)transform.position;
-            aimUnitDirection.Normalize();
-            float angle = Vector2.Angle(Vector2.up, aimUnitDirection);
-            angle += Time.deltaTime * thumbstickTurnSensitivity * xAxis;
-            Vector2 unitAngle = AngleToUnitVector(angle);
-            leapAimPosition = transform.position;
-            leapAimPosition += unitAngle;*/
-
-            // aim directly by thumbstick
-            leapAimPosition = transform.position;
-            leapAimPosition += new Vector2(xAxis, yAxis);
+            var turnAmt = thumbstickTurnSensitivity;
+            if (Input.GetAxis("FastTurn") < -.5f)
+            {
+                turnAmt *= thumbstickTriggerScale;
+            }
+            leapOrientation.Rotate(new Vector3(0f, 0f, 1f), -xAxis * Time.deltaTime * turnAmt, Space.World);
         }
         else {
             Vector3 mouseWorldPos = mousePosition;
             mouseWorldPos.z = transform.position.z - cam.transform.position.z;
             leapAimPosition = cam.ScreenToWorldPoint(mouseWorldPos);
+            leapOrientation.rotation = Quaternion.LookRotation((leapAimPosition - (Vector2)transform.position));
         }
         lastMousePosition = mousePosition;
         if (debugAimPosition != null)
@@ -158,8 +151,7 @@ public class Player : MonoBehaviour {
         swimmingDrop = null;
         playerAnimator.SetBool("InWater", false);
         dropletSoundEmitter.PlayOne();
-        Vector2 leapDirection = leapAimPosition - (Vector2)transform.position;
-        leapDirection.Normalize();
+        Vector2 leapDirection = leapOrientation.forward;
         body.AddForce(leapDirection * leapStrength, ForceMode2D.Impulse);
         leapGuide.gameObject.SetActive(false);
     }

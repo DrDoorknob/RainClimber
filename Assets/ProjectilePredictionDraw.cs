@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectilePredictionDraw : MonoBehaviour {
-
-    public Vector3 originPoint;
-    public Vector3 aimPoint;
+    
+    public Vector3 aimDirection;
     LineRenderer lineRenderer;
 
     public int numPoints;
@@ -25,8 +24,8 @@ public class ProjectilePredictionDraw : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        Vector2 position = originPoint;
-        Vector2 velocity = aimPoint - originPoint;
+        Vector2 position = transform.position;
+        Vector2 velocity = aimDirection;
         velocity.Normalize();
         velocity *= playerRef.leapStrength;
         
