@@ -18,10 +18,13 @@ public class RaindropController : MonoBehaviour {
     public Vector2 spawnAreaSize;
     public float optimalJumpDistance;
 
+    float dropRadius;
 
     // Use this for initialization
     void Start () {
         Raindrop.idIncrement = 0;
+        var defaultCircleCollider = raindropTemplate.GetComponent<CircleCollider2D>();
+        dropRadius = defaultCircleCollider != null ? defaultCircleCollider.radius : 0f;
         dropPool = new GameObjectPool<Raindrop>(20, raindropTemplate);
         Vector2 firstDrop = player.transform.position;
         firstDrop += 2 * Vector2.down;
@@ -162,7 +165,7 @@ public class RaindropController : MonoBehaviour {
         foreach (var r in dropPool.Items)
         {
             var distance = Vector2.Distance(pos, r.transform.position);
-            if (distance <= (2f * r.GetComponent<CircleCollider2D>().radius))
+            if (distance <= (2f * dropRadius))
             {
                 return 0f;
             }
