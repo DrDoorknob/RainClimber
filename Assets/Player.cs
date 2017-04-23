@@ -143,7 +143,7 @@ public class Player : MonoBehaviour {
     public void EnterDrop(Raindrop r)
     {
         
-        if (swimmingDrop != null)
+        if (swimmingDrop != null || dead)
         {
             return; // ignore
         }
