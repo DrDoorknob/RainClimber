@@ -93,7 +93,14 @@ public class GameUI : MonoBehaviour {
         {
             PlayerPrefs.SetFloat("BestHeight", topPlayerHeight);
         }
-        gameOverClimbStats.text = String.Format("You climbed {0} feet - your previous best was {1}", topPlayerHeight, lastBest);
+        if (lastBest > 0f)
+        {
+            gameOverClimbStats.text = String.Format("You climbed {0} feet - your previous best was {1}", topPlayerHeight, lastBest);
+        }
+        else
+        {
+            gameOverClimbStats.text = String.Format("You climbed {0} feet!", topPlayerHeight);
+        }
         anim.SetBool("GameOver", true);
     }
 
