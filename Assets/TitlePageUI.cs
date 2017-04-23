@@ -31,11 +31,13 @@ public class TitlePageUI : MonoBehaviour {
 
     public void NewGame()
     {
+        Debug.Log("Starting the game");
         SceneManager.LoadScene(1);
     }
 
     public void Exit()
     {
+        Debug.Log("Exiting game");
         Application.Quit();
     }
 }
