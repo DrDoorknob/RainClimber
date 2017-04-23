@@ -5,6 +5,7 @@ using UnityEngine;
 public class ProjectilePredictionDraw : MonoBehaviour {
     
     public Vector3 aimDirection;
+    public float impulseSpeed;
     LineRenderer lineRenderer;
 
     public int numPoints;
@@ -27,7 +28,7 @@ public class ProjectilePredictionDraw : MonoBehaviour {
         Vector2 position = transform.position;
         Vector2 velocity = aimDirection;
         velocity.Normalize();
-        velocity *= playerRef.leapStrength;
+        velocity *= impulseSpeed;
         
         for (var pointidx = 0; pointidx < numPoints; pointidx++)
         {

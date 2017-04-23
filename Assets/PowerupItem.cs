@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeathPlane : MonoBehaviour {
+public class PowerupItem : MonoBehaviour {
 
-    public float minPlayerDistance;
-    public Player player;
+    Powerup powerup;
 
 	// Use this for initialization
 	void Start () {
-		
+        powerup = Powerup.Jump;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        var pos = transform.position;
-        pos.y = Mathf.Max(transform.position.y, player.transform.position.y - minPlayerDistance);
-        transform.position = pos;
+	void Update () {		
 	}
 
     void OnTriggerEnter2D(Collider2D other)
@@ -27,6 +23,8 @@ public class DeathPlane : MonoBehaviour {
             Debug.Log("Collided with a non-player rigidbody. ignoring.");
             return;
         }
-        p.Kill();
+        PowerupController.Instance.Obtain(powerup);
+        Destroy(gameObject);
     }
+
 }

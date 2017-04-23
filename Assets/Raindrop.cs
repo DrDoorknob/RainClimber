@@ -29,6 +29,7 @@ public class Raindrop : MonoBehaviour {
         if (p == null)
         {
             Debug.Log("Collided with a non-player rigidbody. ignoring.");
+            return;
         }
         p.EnterDrop(this);
     }

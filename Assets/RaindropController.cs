@@ -18,6 +18,10 @@ public class RaindropController : MonoBehaviour {
     public Vector2 spawnAreaSize;
     public float optimalJumpDistance;
 
+    public GameObject[] powerupTemplates;
+    public PowerupController powerupController;
+    public float powerupChance;
+
     float dropRadius;
 
     // Use this for initialization
@@ -51,6 +55,10 @@ public class RaindropController : MonoBehaviour {
         }
         if (dying != null)
         {
+            var powerup = dying.GetComponentInChildren<PowerupItem>();
+            if (powerup != null) {
+                Destroy(powerup.gameObject);
+            }
             dropPool.MakeInactive(dying);
         }
         int abovePlayer = NumRaindropsAbovePosition(player.transform.position.y);
@@ -71,6 +79,13 @@ public class RaindropController : MonoBehaviour {
     {
         Vector3 v3 = v;
         Raindrop r = dropPool.Make(v3);
+        if (Random.value < powerupChance)
+        {
+            // Spawn a powerup with it
+            System.Array possibilities = System.Enum.GetValues(typeof(Powerup));
+            Powerup p = (Powerup)possibilities.GetValue(Mathf.RoundToInt(Random.Range(0, possibilities.Length)));
+            Instantiate(powerupTemplates[(int)p], r.transform.position, Quaternion.identity, r.transform);
+        }
         r.velocity = new Vector2(0, -1 * speed);
         return r;
     }

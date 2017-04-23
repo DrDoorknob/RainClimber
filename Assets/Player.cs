@@ -23,9 +23,14 @@ public class Player : MonoBehaviour {
     public Vector2 leapAimPosition;
     public Transform leapOrientation;
     public Transform debugAimPosition;
-    public float leapStrength;
+    public float leapStrengthFromDrop;
+    public float leapStrengthPowerup;
     public float thumbstickTurnSensitivity;
     public float thumbstickTriggerScale;
+
+    public PowerupController powerups;
+
+    bool hasDoubleJump = true;
 
     bool dead;
 
@@ -107,25 +112,18 @@ public class Player : MonoBehaviour {
             debugAimPosition.transform.position = leapAimPosition;
         }
 
-        if (swimmingDrop != null)
+        
+        if (Input.GetButtonDown("Jump"))
         {
-            if (Input.GetButtonDown("Jump"))
+            if (swimmingDrop != null)
             {
                 LeapFromRaindrop();
             }
+            else if (powerups.HasAny(Powerup.Jump) && hasDoubleJump)
+            {
+                LeapFromMidair();
+            }
         }
-    }
-
-    private static Vector2 AngleToUnitVector(float angle)
-    {
-        // https://forum.unity3d.com/threads/c-getting-a-vector-2-from-an-angle.273833/
-        angle *= Mathf.Deg2Rad;
-        var ca = Mathf.Cos(angle);
-        var sa = Mathf.Sin(angle);
-        var rx = -1 * sa;
-        var ry = ca;
-
-        return new Vector2(rx, ry);
     }
 
     public void EnterDrop(Raindrop r)
@@ -135,11 +133,13 @@ public class Player : MonoBehaviour {
         {
             return; // ignore
         }
+        hasDoubleJump = true;
         Debug.Log("Entered raindrop");
         body.gravityScale = 0f;
         swimmingDrop = r;
         playerAnimator.SetBool("InWater", true);
         dropletSoundEmitter.PlayOne();
+        leapGuide.impulseSpeed = leapStrengthFromDrop;
         leapGuide.gameObject.SetActive(true);
         sprite.transform.rotation = Quaternion.identity;
     }
@@ -152,7 +152,23 @@ public class Player : MonoBehaviour {
         playerAnimator.SetBool("InWater", false);
         dropletSoundEmitter.PlayOne();
         Vector2 leapDirection = leapOrientation.forward;
-        body.AddForce(leapDirection * leapStrength, ForceMode2D.Impulse);
+        body.AddForce(leapDirection * leapStrengthFromDrop, ForceMode2D.Impulse);
+        if (!powerups.HasAny(Powerup.Jump))
+        {
+            leapGuide.gameObject.SetActive(false);
+        }
+        else
+        {
+            leapGuide.impulseSpeed = leapStrengthPowerup;
+        }
+    }
+
+    public void LeapFromMidair()
+    {
+        powerups.Use(Powerup.Jump);
+        Debug.Log("Midair leap");
+        body.AddForce((body.velocity * -1f) + ((Vector2)leapOrientation.forward * leapStrengthPowerup), ForceMode2D.Impulse);
+        hasDoubleJump = false;
         leapGuide.gameObject.SetActive(false);
     }
 }
