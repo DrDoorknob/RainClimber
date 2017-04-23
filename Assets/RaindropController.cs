@@ -21,6 +21,7 @@ public class RaindropController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        Raindrop.idIncrement = 0;
         dropPool = new GameObjectPool<Raindrop>(20, raindropTemplate);
         Vector2 firstDrop = player.transform.position;
         firstDrop += 2 * Vector2.down;

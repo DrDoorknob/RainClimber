@@ -15,12 +15,12 @@ public class TitlePageUI : MonoBehaviour {
 		
 	}
 
-    void NewGame()
+    public void NewGame()
     {
         SceneManager.LoadScene(1);
     }
 
-    void Exit()
+    public void Exit()
     {
         Application.Quit();
     }

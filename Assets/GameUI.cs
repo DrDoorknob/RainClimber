@@ -79,6 +79,8 @@ public class GameUI : MonoBehaviour {
     {
         anim.SetBool("Paused", false);
         Time.timeScale = 1;
+        Input.ResetInputAxes();
+
         player.ControlsEnabled = true;
     }
 
