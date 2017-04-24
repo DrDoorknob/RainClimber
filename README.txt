@@ -5,7 +5,7 @@ David "Katana" Keyworth
 http://www.ablanknotebook.com
 
 ARTIST
-Alexander "Akira" Tanaka
+Alexandre "Akira" Tanaka
 https://akiratan.carbonmade.com/
 
 
