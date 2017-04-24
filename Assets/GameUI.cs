@@ -43,8 +43,8 @@ public class GameUI : MonoBehaviour {
         int playerHeightInt = Mathf.FloorToInt(topPlayerHeight);
         if (playerHeightInt > topPlayerHeightInt)
         {
-            GainedAFoot();
             topPlayerHeightInt = playerHeightInt;
+            GainedAFoot();
         }
 
         if (Input.GetButtonDown("Pause") && !anim.GetBool("GameOver"))

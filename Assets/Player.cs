@@ -20,6 +20,8 @@ public class Player : MonoBehaviour {
     public SpriteRenderer sprite;
     public Raindrop swimmingDrop;
     public ProjectilePredictionDraw leapGuide;
+    public ParticleSystem enterBubbleParticle;
+    public ParticleSystem exitBubbleParticle;
     public Vector2 leapAimPosition;
     public Transform leapOrientation;
     public Transform debugAimPosition;
@@ -139,6 +141,7 @@ public class Player : MonoBehaviour {
         swimmingDrop = r;
         playerAnimator.SetBool("InWater", true);
         dropletSoundEmitter.PlayOne();
+        enterBubbleParticle.Play();
         leapGuide.impulseSpeed = leapStrengthFromDrop;
         leapGuide.gameObject.SetActive(true);
         sprite.transform.rotation = Quaternion.identity;
@@ -151,6 +154,7 @@ public class Player : MonoBehaviour {
         swimmingDrop = null;
         playerAnimator.SetBool("InWater", false);
         dropletSoundEmitter.PlayOne();
+        exitBubbleParticle.Play();
         Vector2 leapDirection = leapOrientation.forward;
         body.AddForce(leapDirection * leapStrengthFromDrop, ForceMode2D.Impulse);
         if (!powerups.HasAny(Powerup.Jump))
