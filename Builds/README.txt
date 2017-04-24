@@ -20,3 +20,7 @@ lobo@sandsofa.de
 Artist: Dhalius
 http://shrecords.wordpress.com, 
 Email: kreativaweb@gmail.com
+
+"Mr Sunshine 2" font
+by Medina Grégory / dcoxy © (copyright) Free for personal use
+under attached Free Font Terms of Use

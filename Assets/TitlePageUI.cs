@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -8,6 +9,9 @@ public class TitlePageUI : MonoBehaviour {
 
     public Animator screenAnimator;
     public Image fadeOverPanel;
+
+    public GameObject[] pages;
+    public EventSystem eventSystem;
 
     public float fadeInTime;
 
@@ -28,6 +32,16 @@ public class TitlePageUI : MonoBehaviour {
             fadeOverPanel.color = new Color(0f, 0f, 0f, 0f);
         }
 	}
+
+    public void SetPageNumber(int pageN)
+    {
+        screenAnimator.SetInteger("Page", pageN);
+        var buttons = pages[pageN].GetComponentsInChildren<Button>();
+        if (buttons.Length > 0)
+        {
+            eventSystem.SetSelectedGameObject(buttons[0].gameObject);
+        }
+    }
 
     public void NewGame()
     {
